@@ -1,33 +1,68 @@
-import { StyleSheet, Text, View,  StatusBar, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View,  StatusBar, ScrollView, Image, Button } from 'react-native';
 import { planetas } from './planetas'
 import { CreateComponent } from './Planet'
+import { useState } from 'react';
+
+let currentSelected = 0
 
 export default function App() {
 
+  const [value, setValue] = useState( planetas[0] )
+  
+  const changeData = () => {
+    setValue( planetas[ currentSelected ] )
+  }
+
+  const next = () => {
+    currentSelected++
+    if( currentSelected > planetas.length-1) currentSelected = 0
+
+    changeData()
+  }
+  
+  const previous = () => {
+    currentSelected--
+    if( currentSelected < 0) currentSelected = planetas.length-1
+
+    changeData()
+  }
+
   return (
+  
     <View style={styles.container}>
-      <StatusBar style="auto" />
-       
-      <ScrollView showsHorizontalScrollIndicator={false}  style={styles.scrool}>
+    <StatusBar style="auto" />
+     
+    <ScrollView showsHorizontalScrollIndicator={false}  style={styles.scrool}>
 
-        <View style={styles.header}>
-            <Image source={require('./assets/hand.png')} style={[styles.mainIcon, styles.mainIcon2]}/>
-            <Text style={styles.title}>VAMOS EXPLORAR</Text>
-            <Image source={require('./assets/hand.png')} style={styles.mainIcon}/>
-        </View>
+      <View style={styles.header}>
+          <Image source={require('./assets/hand.png')} style={[styles.mainIcon, styles.mainIcon2]}/>
+          <Text style={styles.title}>VAMOS EXPLORAR</Text>
+          <Image source={require('./assets/hand.png')} style={styles.mainIcon}/>
+      </View>
 
-        {
-          planetas.map( planet => CreateComponent( planet, styles ))
-        }
+      { CreateComponent( value, styles ) }
 
-      </ScrollView>
-      
+    </ScrollView>
+    
+
+    <View style={styles.buttonsContainer}>
+      <Button title='anterior' onPress={previous}></Button>
+      <Button title='proximo'  onPress={next}></Button>
     </View>
+    
+  </View>
+
   );
 }
 
 const styles = StyleSheet.create({
   
+  buttonsContainer: {
+    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
   dataValue: {
     color: 'white',
   },
